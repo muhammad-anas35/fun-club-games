@@ -10,6 +10,7 @@ interface NavbarProps {
 
 export default function Navbar({ isLoggedIn = false, onNavigate }: NavbarProps) {
   const [activeSection, setActiveSection] = useState('Home')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   
   useEffect(() => {
