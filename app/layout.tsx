@@ -5,6 +5,9 @@ import Script from 'next/script'
 export const metadata: Metadata = {
   title: 'Fun Club Games',
   description: 'Making learning fun through interactive gameplay',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({
