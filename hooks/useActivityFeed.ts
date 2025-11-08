@@ -23,15 +23,25 @@ export function useActivityFeed() {
     const activitiesKey = `activities_${userEmail}`
     const storedActivities = JSON.parse(localStorage.getItem(activitiesKey) || '[]')
     
-    setActivities([
+    // Combine activities with welcome message at the end if it exists
+    const welcomeActivity = storedActivities.find(a => a.message === 'Welcome to Fun Club Games!')
+    const otherActivities = storedActivities.filter(a => a.message !== 'Welcome to Fun Club Games!').slice(0, 9)
+    
+    const finalActivities = [
       {
         message: 'Welcome to Fun Club Games!',
         icon: 'fa-check-circle',
         time: 'Just now',
         timestamp: new Date().toISOString()
       },
-      ...storedActivities.slice(0, 9)
-    ])
+      ...otherActivities
+    ]
+    
+    if (welcomeActivity) {
+      finalActivities.push(welcomeActivity)
+    }
+    
+    setActivities(finalActivities.slice(0, 10))
   }, [])
 
   const saveActivity = (message: string, icon: string = 'fa-info-circle') => {
@@ -58,11 +68,16 @@ export function useActivityFeed() {
     const updatedActivities = [newActivity, ...storedActivities].slice(0, 20)
     localStorage.setItem(activitiesKey, JSON.stringify(updatedActivities))
     
-    setActivities(prev => [
-      newActivity,
-      ...prev.filter(a => a.message !== 'Welcome to Fun Club Games!'),
-      prev.find(a => a.message === 'Welcome to Fun Club Games!')!
-    ].slice(0, 10))
+    // Update the state with the new activity and the stored activities, capped at 10
+    const welcomeActivity = updatedActivities.find(a => a.message === 'Welcome to Fun Club Games!')
+    const otherActivities = updatedActivities.filter(a => a.message !== 'Welcome to Fun Club Games!').slice(0, 9)
+    
+    const finalActivities = [newActivity, ...otherActivities]
+    if (welcomeActivity && !finalActivities.some(a => a.message === welcomeActivity.message)) {
+      finalActivities.push(welcomeActivity)
+    }
+    
+    setActivities(finalActivities.slice(0, 10))
   }
 
   return { activities, saveActivity }

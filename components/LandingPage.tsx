@@ -24,6 +24,7 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
   const { activities, saveActivity } = useActivityFeed()
   const [activeModal, setActiveModal] = useState<string | null>(null)
   const [activeApp, setActiveApp] = useState<string | null>(null)
+  const [showAllActivities, setShowAllActivities] = useState(false)
 
   const handleAction = (action: string) => {
     switch(action) {
@@ -176,21 +177,38 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
 
           <div className="glass-effect rounded-2xl sm:rounded-3xl p-5 sm:p-9 shadow-lg border-2 border-primary/20 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-accent to-primary bg-[length:200%_100%] animate-activity-bar"></div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl text-primary mb-4 sm:mb-6 font-bold">Recent Activity</h2>
-            <div className="flex flex-col gap-3 sm:gap-4">
-              {activities.map((activity, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 bg-gradient-to-r from-primary/5 to-secondary/3 rounded-xl sm:rounded-2xl border-l-4 border-primary transition-all duration-300 hover:translate-x-2 hover:scale-105 hover:shadow-lg hover:border-l-6 relative overflow-hidden group"
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl text-primary font-bold">Recent Activity</h2>
+              {activities.length > 3 && (
+                <button
+                  onClick={() => setShowAllActivities(!showAllActivities)}
+                  className="px-3 py-1 bg-gradient-to-r from-primary to-primary-dark text-white text-xs sm:text-sm rounded-full hover:from-primary-dark hover:to-primary transition-all duration-300 shadow"
                 >
-                  <div className="absolute left-0 top-0 h-full w-0 bg-gradient-to-r from-primary/10 to-transparent transition-all duration-300 group-hover:w-full"></div>
-                  <i className={`fas ${activity.icon} text-primary text-lg sm:text-xl mt-0.5 relative z-10`}></i>
-                  <div className="flex-1 relative z-10">
-                    <p className="m-0 mb-1 text-gray-800 text-sm sm:text-base font-bold">{activity.message}</p>
-                    <span className="text-gray-500 text-xs sm:text-sm">{activity.time}</span>
+                  {showAllActivities ? 'Show Less' : 'More'}
+                </button>
+              )}
+            </div>
+            <div className="flex flex-col gap-3 sm:gap-4">
+              {activities
+                .slice(0, showAllActivities ? undefined : 3)
+                .map((activity, idx) => (
+                  <div
+                    key={idx}
+                    className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 bg-gradient-to-r from-primary/5 to-secondary/3 rounded-xl sm:rounded-2xl border-l-4 border-primary transition-all duration-300 hover:translate-x-2 hover:scale-105 hover:shadow-lg hover:border-l-6 relative overflow-hidden group"
+                  >
+                    <div className="absolute left-0 top-0 h-full w-0 bg-gradient-to-r from-primary/10 to-transparent transition-all duration-300 group-hover:w-full"></div>
+                    <i className={`fas ${activity.icon} text-primary text-lg sm:text-xl mt-0.5 relative z-10`}></i>
+                    <div className="flex-1 relative z-10">
+                      <p className="m-0 mb-1 text-gray-800 text-sm sm:text-base font-bold">{activity.message}</p>
+                      <span className="text-gray-500 text-xs sm:text-sm">{activity.time}</span>
+                    </div>
                   </div>
+                ))}
+              {!showAllActivities && activities.length > 3 && (
+                <div className="text-center text-gray-600 text-sm py-2">
+                  +{activities.length - 3} more activity{activities.length - 3 > 1 ? 'ies' : 'y'}
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

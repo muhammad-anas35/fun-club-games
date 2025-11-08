@@ -471,14 +471,47 @@ const handleNavLink = (linkText) => {
             saveActivity('🏠 Navigated to Home', 'fa-home');
             break;
         case 'games':
-            window.scrollTo({ top: document.querySelector('.quick-actions').offsetTop - 100, behavior: 'smooth' });
-            saveActivity('🎮 Viewed Games section', 'fa-gamepad');
+            const quickActionsSection = document.querySelector('.quick-actions');
+            if (quickActionsSection) {
+                window.scrollTo({ top: quickActionsSection.offsetTop - 100, behavior: 'smooth' });
+                saveActivity('🎮 Viewed Games section', 'fa-gamepad');
+            } else {
+                // If on login page, navigate to landing page first
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (currentUser) {
+                    // User is logged in but on wrong page, redirect to landing
+                    showLandingPage(currentUser.username);
+                    setTimeout(() => {
+                        const landingQuickActions = document.querySelector('.quick-actions');
+                        if (landingQuickActions) {
+                            window.scrollTo({ top: landingQuickActions.offsetTop - 100, behavior: 'smooth' });
+                            saveActivity('🎮 Viewed Games section', 'fa-gamepad');
+                        }
+                    }, 100);
+                } else {
+                    // User needs to log in first
+                    alert('Please log in to access games!');
+                    saveActivity('⚠️ Attempted to access games without login', 'fa-info-circle');
+                }
+            }
             break;
         case 'leaderboard':
-            showLeaderboard();
+            const currentUserForLeaderboard = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUserForLeaderboard) {
+                showLeaderboard();
+            } else {
+                alert('Please log in to view leaderboard!');
+                saveActivity('⚠️ Attempted to access leaderboard without login', 'fa-info-circle');
+            }
             break;
         case 'profile':
-            showProfile();
+            const currentUserForProfile = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUserForProfile) {
+                showProfile();
+            } else {
+                alert('Please log in to view profile!');
+                saveActivity('⚠️ Attempted to access profile without login', 'fa-info-circle');
+            }
             break;
     }
 };
@@ -1636,8 +1669,33 @@ window.onclick = (event) => {
     });
 };
 
-// Check if user is already logged in on page load
+// Hamburger menu functionality
 document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navbar = document.querySelector('.navbar');
+    
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            navbar.classList.toggle('active');
+        });
+    }
+    
+    // Close mobile menu when clicking on a link
+    const navLinks = document.querySelectorAll('.nav-link-fun');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navbar.classList.remove('active');
+        });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (event) => {
+        if (!navbar.contains(event.target) && navbar.classList.contains('active')) {
+            navbar.classList.remove('active');
+        }
+    });
+
+    // Check if user is already logged in on page load
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
         const user = JSON.parse(currentUser);
