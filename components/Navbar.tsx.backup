@@ -49,7 +49,18 @@ export default function Navbar({ isLoggedIn = false, onNavigate }: NavbarProps) 
         'Contact': ['.contact', '#contact-section', '.contact-section']
       }
       
-
+      const selectors = elementSelectors[section] || []
+      let elementFound = false
+      
+      for (const selector of selectors) {
+        const element = document.querySelector(selector)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          elementFound = true
+          break
+        }
+      }
+      
       // Special handling for Home section - scroll to top
       if (section === 'Home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });

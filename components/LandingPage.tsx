@@ -80,7 +80,7 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
   return (
     <>
       <div className="w-full min-h-[calc(100vh-80px)] px-4 sm:px-5 py-8 sm:py-10 mt-20 max-w-7xl mx-auto">
-        <div className="text-center py-10 sm:py-16 px-4 sm:px-5 bg-gradient-hero bg-[length:200%_200%] animate-hero-gradient rounded-2xl sm:rounded-3xl mb-8 sm:mb-12 shadow-2xl border-2 border-primary/20 backdrop-blur-lg relative overflow-hidden">
+        <div className="welcome-section text-center py-10 sm:py-16 px-4 sm:px-5 bg-gradient-hero bg-[length:200%_200%] animate-hero-gradient rounded-2xl sm:rounded-3xl mb-8 sm:mb-12 shadow-2xl border-2 border-primary/20 backdrop-blur-lg relative overflow-hidden">
           <div className="absolute -top-1/2 -right-1/2 w-[200%] h-[200%] bg-gradient-radial from-primary/10 to-transparent animate-hero-pulse"></div>
           <div className="relative z-10">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 gradient-text tracking-wide">
@@ -91,7 +91,7 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
         </div>
 
         <div className="flex flex-col gap-10">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 sm:gap-6 mb-5">
+          <div className="stats-section grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 sm:gap-6 mb-5">
             {[
               { icon: 'fa-trophy', label: 'Games Played', value: stats.games },
               { icon: 'fa-star', label: 'Achievements', value: stats.achievements },
