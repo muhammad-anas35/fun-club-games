@@ -10,6 +10,9 @@ import MemoryModal from './games/MemoryModal'
 import RPSModal from './games/RPSModal'
 import QuizModal from './games/QuizModal'
 import HistoryModal from './games/HistoryModal'
+import Calculator from './apps/Calculator'
+import CurrencyConverter from './apps/CurrencyConverter'
+import Timer from './apps/Timer'
 
 interface LandingPageProps {
   username: string
@@ -20,6 +23,7 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
   const { stats, incrementGameCount } = useUserStats()
   const { activities, saveActivity } = useActivityFeed()
   const [activeModal, setActiveModal] = useState<string | null>(null)
+  const [activeApp, setActiveApp] = useState<string | null>(null)
 
   const handleAction = (action: string) => {
     switch(action) {
@@ -54,6 +58,18 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
         break
       case 'game-history':
         setActiveModal('history')
+        break
+      case 'calculator':
+        setActiveApp('calculator')
+        saveActivity('🔢 Opened Calculator App!', 'fa-calculator')
+        break
+      case 'currency-converter':
+        setActiveApp('currency-converter')
+        saveActivity('💱 Opened Currency Converter!', 'fa-exchange-alt')
+        break
+      case 'timer':
+        setActiveApp('timer')
+        saveActivity('⏱️ Opened Timer App!', 'fa-clock')
         break
       default:
         break
@@ -129,6 +145,35 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
             </div>
           </div>
 
+          <div className="mt-8 apps-section">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl text-primary mb-6 sm:mb-8 font-bold text-center">Apps</h2>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] sm:grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-3 sm:gap-5">
+              {[
+                { icon: 'fa-calculator', title: 'Calculator', desc: 'Simple and powerful calculator', action: 'calculator' },
+                { icon: 'fa-exchange-alt', title: 'Currency Converter', desc: 'Convert between currencies', action: 'currency-converter' },
+                { icon: 'fa-clock', title: 'Timer', desc: 'Stopwatch and timer tools', action: 'timer' }
+              ].map((app, idx) => (
+                <div
+                  key={idx}
+                  className="glass-effect rounded-2xl sm:rounded-3xl p-5 sm:p-9 text-center shadow-lg border-2 border-primary/20 transition-all duration-300 hover:-translate-y-3 hover:scale-105 hover:shadow-2xl hover:border-primary relative overflow-hidden group"
+                >
+                  <div className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-left duration-500 group-hover:left-full"></div>
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-primary bg-[length:200%_200%] animate-icon-gradient rounded-xl sm:rounded-[22px] flex items-center justify-center text-3xl sm:text-4xl text-white mb-3 sm:mb-5 shadow-lg relative z-10 group-hover:scale-125 group-hover:rotate-12 transition-transform">
+                    <i className={`fas ${app.icon}`}></i>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl text-primary m-0 mb-2 font-bold">{app.title}</h3>
+                  <p className="text-sm sm:text-base text-gray-600 m-0 mb-3 sm:mb-5 flex-1">{app.desc}</p>
+                  <button
+                    onClick={() => handleAction(app.action)}
+                    className="w-full max-w-[200px] py-2.5 sm:py-3.5 px-6 sm:px-9 bg-gradient-button bg-[length:200%_200%] animate-button-gradient text-white border-none rounded-[25px] sm:rounded-[30px] text-sm sm:text-base font-bold cursor-pointer transition-all duration-300 shadow-lg relative overflow-hidden uppercase tracking-wide hover:-translate-y-1 hover:scale-105 hover:shadow-xl"
+                  >
+                    <span className="relative z-10">Open</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="glass-effect rounded-2xl sm:rounded-3xl p-5 sm:p-9 shadow-lg border-2 border-primary/20 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-accent to-primary bg-[length:200%_100%] animate-activity-bar"></div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl text-primary mb-4 sm:mb-6 font-bold">Recent Activity</h2>
@@ -168,6 +213,64 @@ export default function LandingPage({ username, onLogout }: LandingPageProps) {
       {activeModal === 'rps' && <RPSModal onClose={() => setActiveModal(null)} saveActivity={saveActivity} incrementGameCount={incrementGameCount} />}
       {activeModal === 'quiz' && <QuizModal onClose={() => setActiveModal(null)} saveActivity={saveActivity} incrementGameCount={incrementGameCount} />}
       {activeModal === 'history' && <HistoryModal onClose={() => setActiveModal(null)} />}
+
+      {/* App Modals */}
+      {activeApp === 'calculator' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="text-xl font-bold">Calculator</h3>
+              <button 
+                onClick={() => setActiveApp(null)} 
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="p-4">
+              <Calculator />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeApp === 'currency-converter' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="text-xl font-bold">Currency Converter</h3>
+              <button 
+                onClick={() => setActiveApp(null)} 
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="p-4">
+              <CurrencyConverter />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeApp === 'timer' && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[1000] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+            <div className="p-4 border-b flex justify-between items-center">
+              <h3 className="text-xl font-bold">Timer</h3>
+              <button 
+                onClick={() => setActiveApp(null)} 
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="p-4">
+              <Timer />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

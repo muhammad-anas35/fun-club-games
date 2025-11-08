@@ -41,6 +41,7 @@ export default function Navbar({ isLoggedIn = false, onNavigate }: NavbarProps) 
       const elementSelectors: Record<string, string[]> = {
         'Home': ['header', 'main', '#top'],
         'Games': ['.quick-actions', '[data-game="snake-ladder"]', '.games-section'],
+        'Apps': ['.apps-section', '[data-app="calculator"]', '.apps-section'],
         'Leaderboard': ['.leaderboard', '#leaderboard-section', '.leaderboard-section'],
         'Profile': ['.profile', '#profile-section', '.profile-section'],
         'About': ['.about', '#about-section', '.about-section'],
@@ -73,18 +74,21 @@ export default function Navbar({ isLoggedIn = false, onNavigate }: NavbarProps) 
     ? [
         { icon: 'fa-home', label: 'Home', section: 'Home' },
         { icon: 'fa-gamepad', label: 'Games', section: 'Games' },
+        { icon: 'fa-th', label: 'Apps', section: 'Apps' },
         { icon: 'fa-trophy', label: 'Leaderboard', section: 'Leaderboard' },
         { icon: 'fa-user', label: 'Profile', section: 'Profile' }
       ]
     : [
         { icon: 'fa-home', label: 'Home', section: 'Home' },
+        { icon: 'fa-th', label: 'Apps', section: 'Apps' },
         { icon: 'fa-info-circle', label: 'About', section: 'About' },
         { icon: 'fa-question-circle', label: 'Help', section: 'Help' },
         { icon: 'fa-envelope', label: 'Contact', section: 'Contact' }
       ]
 
   return (
-    <nav className="w-full bg-gradient-to-r from-secondary via-secondary-dark to-primary to-accent bg-[length:300%_300%] animate-gradient-shift px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center fixed top-0 left-0 z-[1000] shadow-lg border-b-4 border-white/30 overflow-hidden">
+    <>
+      <nav className="w-full bg-gradient-to-r from-secondary via-secondary-dark to-primary to-accent bg-[length:300%_300%] animate-gradient-shift px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center fixed top-0 left-0 z-[1000] shadow-lg border-b-4 border-white/30 overflow-hidden">
       <div className="relative w-16 h-16 flex items-center justify-center gap-1">
         <div className="text-2xl animate-float drop-shadow-md">🎮</div>
         <div className="text-2xl animate-float delay-150 drop-shadow-md">🎲</div>
@@ -161,9 +165,8 @@ export default function Navbar({ isLoggedIn = false, onNavigate }: NavbarProps) 
         </button>
       </div>
     </nav>
-    {/* Mobile Navigation Menu - rendered outside the main nav but at the same level */}
-    <>
-      {mobileMenuOpen && (
+    {/* Mobile Navigation Menu */}
+    {mobileMenuOpen && (
         <div className="fixed inset-0 bg-gradient-to-br from-primary to-secondary z-[999] flex flex-col items-center justify-center pt-20 px-4 pb-16">
           <button 
             className="absolute top-5 right-5 text-white text-2xl z-10"
