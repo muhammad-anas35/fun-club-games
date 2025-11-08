@@ -24,8 +24,8 @@ export function useActivityFeed() {
     const storedActivities = JSON.parse(localStorage.getItem(activitiesKey) || '[]')
     
     // Combine activities with welcome message at the end if it exists
-    const welcomeActivity = storedActivities.find(a => a.message === 'Welcome to Fun Club Games!')
-    const otherActivities = storedActivities.filter(a => a.message !== 'Welcome to Fun Club Games!').slice(0, 9)
+    const welcomeActivity = storedActivities.find((a: Activity) => a.message === 'Welcome to Fun Club Games!')
+    const otherActivities = storedActivities.filter((a: Activity) => a.message !== 'Welcome to Fun Club Games!').slice(0, 9)
     
     const finalActivities = [
       {
@@ -69,11 +69,11 @@ export function useActivityFeed() {
     localStorage.setItem(activitiesKey, JSON.stringify(updatedActivities))
     
     // Update the state with the new activity and the stored activities, capped at 10
-    const welcomeActivity = updatedActivities.find(a => a.message === 'Welcome to Fun Club Games!')
-    const otherActivities = updatedActivities.filter(a => a.message !== 'Welcome to Fun Club Games!').slice(0, 9)
+    const welcomeActivity = updatedActivities.find((a: Activity) => a.message === 'Welcome to Fun Club Games!')
+    const otherActivities = updatedActivities.filter((a: Activity) => a.message !== 'Welcome to Fun Club Games!').slice(0, 9)
     
     const finalActivities = [newActivity, ...otherActivities]
-    if (welcomeActivity && !finalActivities.some(a => a.message === welcomeActivity.message)) {
+    if (welcomeActivity && !finalActivities.some((a: Activity) => a.message === welcomeActivity.message)) {
       finalActivities.push(welcomeActivity)
     }
     
